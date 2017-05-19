@@ -1,0 +1,44 @@
+##########################################################################################
+#   This is the parameter file for GridMAT-MD-Auto.py  (For APL calculation)             #
+#     - arguments and values must be separated by white space (tab or space, any amount) #
+#     - comments must be preceeded by a '#' sign                                         #
+#     - run this program by typing:                                                      #
+#     - Imp. Note: 'coord_file' and 'num_frames' options removed from param_file         #
+#     - coord_file (or trajectory file) is provided as a commandline argument.           #
+#     - num_frames is directly calculated from the trajectory file.                      #
+#     - See the GridMAT-MD manual for information on parameters.                         #
+#                                                                                        #
+#   Usage: python GridMAT-MD-Auto.py <param_example_file> <coord_file> <num_frames>      #
+##########################################################################################
+
+###### Input file and input file parameters
+
+file_type               gro
+num_lipid_types         2
+resname1                POPE
+atomname1               P
+resname2                POPG
+atomname2               P
+solvent                 TIP3
+ions                    NA
+number_of_threads       8
+
+###### Define the size and shape of the grid
+
+box_size                vectors
+### override_vectors    5.2,10.0,6.9
+grid                    200
+conserve_ratio          yes
+
+###### Define whether there is a protein embedded in the bilayer
+
+protein                 no
+precision               1.3
+P_value                 5.0
+
+###### Define the desired output files and format
+
+output_prefix           output_apl
+output_format           column
+thickness               no
+area                    yes
