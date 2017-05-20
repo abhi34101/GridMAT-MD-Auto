@@ -35,19 +35,21 @@ parser = argparse.ArgumentParser(description="GridMAT-MD based automated"
                                              "analysis tool")
 
 parser.add_argument('fa_param', action='store', 
-        help="GridMAT parameter file for calculating area-per-lipid")#positional
+        help="GridMAT parameter file for calculating area/lipid")    #positional
 parser.add_argument('fb_param', action='store', 
 	    help='GridMAT parameter file for calculating thickness')     #positional
 parser.add_argument('f_traj', action='store',
-	    help='trajectory file  Formats:xtc trr')                     #positional
+	    help='Trajectory file  Formats:xtc trr')                     #positional
 parser.add_argument('f_coord', action='store', 
 	    help='(Structure+mass)db file  Format: gro')                 #positional                    
 parser.add_argument('-b', '--btime', action='store', type=int,
-	    help='starting frame (in ps) Default = None', default=None)  #optional
+	    help='Starting frame (in ps) Default = None', default=None)    #optional
 parser.add_argument('-e', '--etime', action='store', type=int,
-	    help='ending frame (in ps) Default = None', default=None)    #optional
+	    help='Ending frame (in ps) Default = None', default=None)      #optional
 parser.add_argument('-s', '--suffix', action='store', type=str,
-	    help='ending frame (in ps) Default = None', default='')      #optional
+	    help='Binary suffix for the gromacs installation', default='') #optional
+parser.add_argument('--skip', action='store', type=int,
+	    help='Only extract every nr-th frame', default='')             #optional
 	                    
 carg=parser.parse_args()
 
@@ -89,17 +91,21 @@ def traj_dump(args):
 	gro_cmd = process_exec(detect_gmx(args.suffix))
 	print "Running trjconv...."
 	if args.btime==None and args.etime==None:
-		cmd = "%s -f %s -s %s -o tmp.gro &>/dev/null" %(gro_cmd, 
+		cmd = "%s -f %s -s %s -o tmp.gro" %(gro_cmd, 
 		        args.f_traj, args.f_coord)
 	elif isinstance(args.btime, int) and isinstance(args.etime, int):
-		cmd = '%s -f %s -s %s -o tmp.gro -b %d -e %d &>/dev/null' %(gro_cmd, 
+		cmd = '%s -f %s -s %s -o tmp.gro -b %d -e %d' %(gro_cmd, 
 		        args.f_traj, args.f_coord, args.btime, args.etime)
 	elif args.etime==None:
-		cmd = '%s -f %s -s %s -o tmp.gro -b %d &>/dev/null' %(gro_cmd, 
+		cmd = '%s -f %s -s %s -o tmp.gro -b %d' %(gro_cmd, 
 		        args.f_traj, args.f_coord, args.btime)
 	else:
-		cmd = '%s -f %s -s %s -o tmp.gro -e %d &>/dev/null' %(gro_cmd, 
+		cmd = '%s -f %s -s %s -o tmp.gro -e %d' %(gro_cmd, 
 		        args.f_traj, args.f_coord, args.etime)
+    
+    if isinstance(args.skip, int):
+        cmd=cmd+" -skip "+str(args.skip)
+        
 	os.system("printf '0\n' | "+cmd)
 	return 0
 
@@ -203,7 +209,7 @@ def make_xvg(xy_dict, prop):
 		    @    xaxis  label "Time (ps)"
 		    @    xaxis  tick major 10000
 		    @    xaxis  tick minor 1000
-		    @    yaxis  label "Percentage solvent accessibility"
+		    @    yaxis  label "Bilayer Thickness (Angstrom)"
 		    @    yaxis  tick major 1
 		    @    yaxis  tick minor 0.1
 		    @TYPE xy
