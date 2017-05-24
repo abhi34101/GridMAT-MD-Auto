@@ -32,7 +32,7 @@ import os, time, sys, subprocess, argparse, psutil
 #########################################################################
 
 parser = argparse.ArgumentParser(description="GridMAT-MD based automated" 
-                                             "analysis tool")
+                                             " analysis tool")
 
 parser.add_argument('fa_param', action='store', 
         help="GridMAT parameter file for calculating area/lipid")    #positional
@@ -49,7 +49,10 @@ parser.add_argument('-e', '--etime', action='store', type=int,
 parser.add_argument('-s', '--suffix', action='store', type=str,
 	    help='Binary suffix for the gromacs installation', default='') #optional
 parser.add_argument('--skip', action='store', type=int,
-	    help='Only extract every nr-th frame', default='')             #optional
+	    help='Only extract every nr-th frame')             #optional
+parser.add_argument('--keep', action='store_const', const='yes',
+	    help='Keep output and log files produced by GridMAT.' 
+	    'Will take addtional space on drive.')                         #optional
 	                    
 carg=parser.parse_args()
 
@@ -102,9 +105,9 @@ def traj_dump(args):
 	else:
 		cmd = '%s -f %s -s %s -o tmp.gro -e %d' %(gro_cmd, 
 		        args.f_traj, args.f_coord, args.etime)
-    
-    if isinstance(args.skip, int):
-        cmd=cmd+" -skip "+str(args.skip)
+	
+	if isinstance(args.skip, int):
+		cmd=cmd+" -skip "+str(args.skip)
         
 	os.system("printf '0\n' | "+cmd)
 	return 0
@@ -194,6 +197,7 @@ def make_xvg(xy_dict, prop):
 	os.system(cmd1)
 	if prop in ["apl", "APL"]:
 		header = """@    title "AVERAGE AREA-PER-LIPID"
+		    @    subtitle "Area-per-lipid-vs-Time"
 		    @    xaxis  label "Time (ps)"
 		    @    xaxis  tick major 10000
 		    @    xaxis  tick minor 1000
@@ -206,10 +210,11 @@ def make_xvg(xy_dict, prop):
 		    """
 	elif prop in ['dpp', 'DPP']:
 		header = """@    title "AVERAGE BILAYER THICKNESS"
+		    @    subtitle "Thickness-vs-Time
 		    @    xaxis  label "Time (ps)"
 		    @    xaxis  tick major 10000
 		    @    xaxis  tick minor 1000
-		    @    yaxis  label "Bilayer Thickness (Angstrom)"
+		    @    yaxis  label "Bilayer Thickness (nm)"
 		    @    yaxis  tick major 1
 		    @    yaxis  tick minor 0.1
 		    @TYPE xy
@@ -265,8 +270,10 @@ def main(args):
 		print "Creating xvg output files."
 		make_xvg(apl_plot(t_list, parse_log()), "apl")
 		make_xvg(dpp_plot(t_list, parse_dat()), "dpp")
-		print "Cleaning up temporary files."
-		os.system('rm *.log *.dat')
+		if args.keep == None:
+			print "Cleaning up temporary files."
+			os.system('rm *.log *.dat')
+		
 		print "Done."
 	
 #######################Program End ######################################
