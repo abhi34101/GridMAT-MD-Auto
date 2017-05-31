@@ -4,11 +4,14 @@
 #     - comments must be preceeded by a '#' sign                                         #
 #     - run this program by typing:                                                      #
 #     - Imp. Note: 'coord_file' and 'num_frames' options removed from param_file         #
-#     - coord_file (or trajectory file) is provided as a commandline argument.           #
-#     - num_frames is directly calculated from the trajectory file.                      #
+#     - 'coord_file' (or trajectory file) is provided as a commandline argument.         #
+#     - 'num_frames' is directly calculated by the program.                              #
 #     - See the GridMAT-MD manual for information on parameters.                         #
 #                                                                                        #
-#   Usage: python GridMAT-MD-Auto.py <param_example_file> <coord_file> <num_frames>      #
+#   Usage: python GridMAT-MD-Auto.py <param_example_file_apl> <param_example_file_dpp>   #
+#          <traj_file> <coord_file>                                                      #
+#                                                                                        #
+#   For additonal flags and options, run:     python GridMAT-MD-Auto.py -h               #
 ##########################################################################################
 
 ###### Input file and input file parameters
