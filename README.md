@@ -56,6 +56,7 @@ during analysis.
 
 #Usage
 
+
 GridMAT-MD-Auto.py [-h] [-b BTIME] [-e ETIME] [-s SUFFIX] [--skip SKIP]
                           [--keep]
                           fa_param fb_param f_traj f_coord
