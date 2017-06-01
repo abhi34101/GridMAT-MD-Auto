@@ -52,6 +52,12 @@ Additionally, user can choose the start and ending time for running the analysis
 subsection of the full trajectory file; a -skip flag is also provided to skip frames
 during analysis.
 
+Another python script output_avg.py is also provided to the users. This script taken
+the output .xvg files produced by GridMAT-MD-Auto and calculates the ensemble average
+value of the property with variance. Optionally, the Isothermal Area Compressibility
+Modulus value, derived from the calculated variance in APL is also printed to the
+output.
+
 #######################################################################################
 
 #Usage
