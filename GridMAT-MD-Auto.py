@@ -69,15 +69,16 @@ def detect_gmx(bin_suffix):
     gmx_list = ['trjconv', 'gmx']
     if bin_suffix != '':
         print "Using executable suffix: "+bin_suffix
-	gmx_list.append('trjconv'+bin_suffix)
-	gmx_list.append('gmx'+bin_suffix)
-	
+        gmx_list.append('trjconv'+bin_suffix)
+        gmx_list.append('gmx'+bin_suffix)
+	print gmx_list
+    
     for g in gmx_list:
         if test_exec(g)==True:
-	    gmexec=g
-	    break
-	else:
-	    raise Exception("""No gromacs executable detected! 
+            gmexec=g
+            break
+    else:
+        raise Exception("""No gromacs executable detected! 
             Please check your gromacs installation.""")
     return gmexec
 	
@@ -94,16 +95,16 @@ def traj_dump(args):
     gro_cmd = process_exec(detect_gmx(args.suffix))
     print "Running trjconv...."
     if args.btime==None and args.etime==None:
-	cmd = "%s -f %s -s %s -o tmp.gro" %(gro_cmd, 
+        cmd = "%s -f %s -s %s -o tmp.gro" %(gro_cmd, 
 		args.f_traj, args.f_coord)
     elif isinstance(args.btime, int) and isinstance(args.etime, int):
         cmd = '%s -f %s -s %s -o tmp.gro -b %d -e %d' %(gro_cmd, 
 		args.f_traj, args.f_coord, args.btime, args.etime)
     elif args.etime==None:
-	cmd = '%s -f %s -s %s -o tmp.gro -b %d' %(gro_cmd, 
+        cmd = '%s -f %s -s %s -o tmp.gro -b %d' %(gro_cmd, 
 		args.f_traj, args.f_coord, args.btime)
     else:
-	cmd = '%s -f %s -s %s -o tmp.gro -e %d' %(gro_cmd, 
+        cmd = '%s -f %s -s %s -o tmp.gro -e %d' %(gro_cmd, 
 		args.f_traj, args.f_coord, args.etime)
 	
     if isinstance(args.skip, int):
@@ -132,8 +133,8 @@ def parse_time():
     time_lst = []
     coord_dat = open('tmp.gro', 'r').readlines()
     for l in coord_dat:
-	if 'Generated' in l:
-	    time_lst.append(float(l.split(' ')[-1]))
+	    if 'Generated' in l:
+	        time_lst.append(float(l.split(' ')[-1]))
     return time_lst
 	
 def parse_log():
@@ -172,7 +173,7 @@ def apl_plot(time_list, log_list):
     apl_dict = {}
     if len(time_list) == len(log_list):
         for x in range(0,len(time_list)):
-	    apl_dict[time_list[x]] = parse_apl(log_list[x])
+	        apl_dict[time_list[x]] = parse_apl(log_list[x])
 	else:
 	    raise ValueError("Something not quite right. The timestamps count \
 	            does not correspond to the apl count.")
@@ -184,11 +185,11 @@ def dpp_plot(time_list, log_list):
     dpp_dict = {}
     if len(time_list) == len(log_list):
         for x in range(0,len(time_list)):
-	    dpp_dict[time_list[x]] = calc_dpp(log_list[x])
+	        dpp_dict[time_list[x]] = calc_dpp(log_list[x])
     else:
         raise ValueError("Something not quite right. The timestamps count \
 		does not correspond to the dpp count.")
-	sys.exit(2)
+        sys.exit(2)
     return dpp_dict
 
 def make_xvg(xy_dict, prop):
@@ -196,7 +197,7 @@ def make_xvg(xy_dict, prop):
     cmd1= 'touch %s-vs-time.xvg' %(prop)
     os.system(cmd1)
     if prop in ["apl", "APL"]:
-	header = """@    title "AVERAGE AREA-PER-LIPID"
+	    header = """@    title "AVERAGE AREA-PER-LIPID"
 	    @    subtitle "Area-per-lipid-vs-Time"
 	    @    xaxis  label "Time (ps)"
 	    @    xaxis  tick major 10000
@@ -209,7 +210,7 @@ def make_xvg(xy_dict, prop):
 	    
 	    """
     elif prop in ['dpp', 'DPP']:
-	header = """@    title "AVERAGE BILAYER THICKNESS"
+	    header = """@    title "AVERAGE BILAYER THICKNESS"
 	    @    subtitle "Thickness-vs-Time
 	    @    xaxis  label "Time (ps)"
 	    @    xaxis  tick major 10000
@@ -223,7 +224,7 @@ def make_xvg(xy_dict, prop):
 	    """
     else:
         raise ValueError("Error. Check your input")
-	sys.exit(2)
+        sys.exit(2)
 
     xvg_file = open(cmd1[6:], 'a')
     xvg_file.write(header)
@@ -231,7 +232,7 @@ def make_xvg(xy_dict, prop):
     key_list.sort()
     for i in key_list:
         cont="\n"+str(i)+" "+ str(xy_dict[i])
-	xvg_file.write(cont)
+        xvg_file.write(cont)
     xvg_file.close()	
     return None
 	
@@ -258,23 +259,23 @@ def main(args):
         continue
     else:
         print "Finished run for trjconv." 
-	print "Running time:", round((time.time()-t0)/60), "minutes"
-	print "*"*72
-	t_list = parse_time()
-	print "Commencing APL calculations."
-	gridmat(args.fa_param, len(t_list))
-	print "APL calculations finished."
-	print "*"*72
-	print "Commencing Dp-p calculations."
-	gridmat(args.fb_param, len(t_list))
-	print "Dp-p calculations finished"
-	print "Creating xvg output files."
-	make_xvg(apl_plot(t_list, parse_log()), "apl")
-	make_xvg(dpp_plot(t_list, parse_dat()), "dpp")
-	if args.keep == None:
-	    print "Cleaning up temporary files."
-	    os.system('rm *.log *.dat')
-    print "Done."
+        print "Running time:", round((time.time()-t0)/60), "minutes"
+        print "*"*72
+        t_list = parse_time()
+        print "Commencing APL calculations."
+        gridmat(args.fa_param, len(t_list))
+        print "APL calculations finished."
+        print "*"*72
+        print "Commencing Dp-p calculations."
+        gridmat(args.fb_param, len(t_list))
+        print "Dp-p calculations finished"
+        print "Creating xvg output files."
+        make_xvg(apl_plot(t_list, parse_log()), "apl")
+        make_xvg(dpp_plot(t_list, parse_dat()), "dpp")
+        if args.keep == None:
+            print "Cleaning up temporary files."
+            os.system('rm *.log *.dat')
+        print "Done."
 	
 
 #######################Program End ######################################
