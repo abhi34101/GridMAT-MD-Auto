@@ -71,7 +71,6 @@ def detect_gmx(bin_suffix):
         print "Using executable suffix: "+bin_suffix
         gmx_list.append('trjconv'+bin_suffix)
         gmx_list.append('gmx'+bin_suffix)
-	print gmx_list
     
     for g in gmx_list:
         if test_exec(g)==True:
