@@ -258,7 +258,7 @@ def main(args):
         continue
     else:
         print "Finished run for trjconv." 
-        print "Running time:", round((time.time()-t0)/60), "minutes"
+        print "Running time:", round((time.time()-t0)/60, 2), "minutes"
         print "*"*72
         t_list = parse_time()
         print "Commencing APL calculations."
