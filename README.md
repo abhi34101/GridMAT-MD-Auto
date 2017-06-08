@@ -58,6 +58,12 @@ value of the property with variance. Optionally, the Isothermal Area Compressibi
 Modulus value, derived from the calculated variance in APL is also printed to the
 output.
 
+THe perl script, GridMAT-MD-parallel.pl provided with this distribution can also be 
+used to run the calculations on a coordinte file in gro format.For usage see below.
+However for obtaining the xmgrace plots of APL and Bilayer thickness, you need to 
+run the python script.
+
+
 #######################################################################################
 
 #Usage
@@ -86,6 +92,9 @@ optional arguments:
   --skip SKIP           Only extract every nr-th frame
   --keep                Keep output and log files produced by GridMAT.Will
                         take addtional space on drive.
+#Usage note: The perl script provided with this distribution can be used as follows:
+  
+  perl GridMAT-MD-parallel.pl <param_file> <coord_file> <number_of_frames> 
 
 ######################################################################################
 
