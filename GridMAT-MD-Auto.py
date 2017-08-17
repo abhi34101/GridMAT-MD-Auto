@@ -130,7 +130,9 @@ def gridmat(param_file, num_frames):
 def parse_time():
     #extracting the time-stamp for all dumped frames
     time_lst = []
-    coord_dat = open('tmp.gro', 'r').readlines()
+    cmd = "grep 'Generated' tmp.gro > t_lst.dat"
+    os.system(cmd)
+    coord_dat = open('t_lst.dat', 'r').readlines()
     for l in coord_dat:
 	    if 'Generated' in l:
 	        time_lst.append(float(l.split(' ')[-1]))
@@ -171,12 +173,13 @@ def apl_plot(time_list, log_list):
     #obtain a dictionary of {time:avg. apl} configuration
     apl_dict = {}
     if len(time_list) == len(log_list):
+        print "Match is there!!"
         for x in range(0,len(time_list)):
-	        apl_dict[time_list[x]] = parse_apl(log_list[x])
-	else:
-	    raise ValueError("Something not quite right. The timestamps count \
+            apl_dict[time_list[x]] = parse_apl(log_list[x])
+    else:
+        raise ValueError("Something not quite right. The timestamps count \
 	            does not correspond to the apl count.")
-	    sys.exit(2)
+        sys.exit(2)
     return apl_dict
 
 def dpp_plot(time_list, log_list):
@@ -224,7 +227,6 @@ def make_xvg(xy_dict, prop):
     else:
         raise ValueError("Error. Check your input")
         sys.exit(2)
-
     xvg_file = open(cmd1[6:], 'a')
     xvg_file.write(header)
     key_list = xy_dict.keys()
@@ -232,7 +234,8 @@ def make_xvg(xy_dict, prop):
     for i in key_list:
         cont="\n"+str(i)+" "+ str(xy_dict[i])
         xvg_file.write(cont)
-    xvg_file.close()	
+    xvg_file.close()
+    
     return None
 	
 def get_trjpid():
@@ -258,7 +261,7 @@ def main(args):
         continue
     else:
         print "Finished run for trjconv." 
-        print "Running time:", round((time.time()-t0)/60, 2), "minutes"
+        print "Running time:", round((time.time()-t0)/60), "minutes"
         print "*"*72
         t_list = parse_time()
         print "Commencing APL calculations."
