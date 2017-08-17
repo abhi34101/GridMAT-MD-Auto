@@ -76,23 +76,34 @@ GridMAT-MD-Auto.py [-h] [-b BTIME] [-e ETIME] [-s SUFFIX] [--skip SKIP]
 GridMAT-MD based automated analysis tool
 
 positional arguments:
-  fa_param              GridMAT parameter file for calculating area/lipid
-  fb_param              GridMAT parameter file for calculating thickness
-  f_traj                Trajectory file Formats:xtc trr
-  f_coord               (Structure+mass)db file Format: gro
+  fa_param                   GridMAT parameter file for calculating area/lipid
+  
+  fb_param               GridMAT parameter file for calculating thickness
+  
+  f_traj                  Trajectory file Formats:xtc trr
+            
+  f_coord                 (Structure+mass)db file Format: gro
 
 optional arguments:
-  -h, --help            show this help message and exit
+  -h, --help             show this help message and exit
+  
   -b BTIME, --btime BTIME
-                        Starting frame (in ps) Default = None
+                          Starting frame (in ps) Default = None
+                        
   -e ETIME, --etime ETIME
-                        Ending frame (in ps) Default = None
+                         Ending frame (in ps) Default = None
+                        
   -s SUFFIX, --suffix SUFFIX
-                        Binary suffix for the gromacs installation
-  --skip SKIP           Only extract every nr-th frame
-  --keep                Keep output and log files produced by GridMAT.Will
-                        take addtional space on drive.
-#Usage note: The perl script provided with this distribution can be used as follows:
+                          Binary suffix for the gromacs installation
+                        
+  --skip SKIP              Only extract every nr-th frame
+  
+  --keep                 Keep output and log files produced by GridMAT. Will
+                                    take addtional space on drive.
+ 
+######################################################################################
+ 
+ #Usage note:            The perl script provided with this distribution can be used as follows:
   
   perl GridMAT-MD-parallel.pl <param_file> <coord_file> <number_of_frames> 
 
